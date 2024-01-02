@@ -7,10 +7,9 @@ const Stopwatch = () => {
   const intervalRef = useRef(null);
 
   const formatTime = (timeInSeconds) => {
-    const minutes = Math.floor(timeInSeconds / 60);
     const seconds = (timeInSeconds % 60).toFixed(3).padStart(6, "0");
 
-    return `${minutes}:${seconds}`;
+    return `${seconds}`;
   };
 
   const startStopwatch = () => {
