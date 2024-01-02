@@ -1,6 +1,5 @@
-import React from 'react';
-import './App.css';
-import Stopwatch from './Stopwatch';
+import React from "react";
+import Stopwatch from "./Stopwatch";
 
 function App() {
   return (

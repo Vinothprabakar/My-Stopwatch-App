@@ -1,52 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
+import "./Stopwatch.css";
 
 const Stopwatch = () => {
-  const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const intervalRef = useRef(null);
 
-  useEffect(() => {
-    let intervalId;
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = (timeInSeconds % 60).toFixed(3).padStart(6, "0");
 
+    return `${minutes}:${seconds}`;
+  };
+
+  const startStopwatch = () => {
     if (isRunning) {
-      intervalId = setInterval(() => {
-        setTime((prevTime) => prevTime + 1);
-      }, 1000);
+      clearInterval(intervalRef.current);
     } else {
-      clearInterval(intervalId);
+      intervalRef.current = setInterval(() => {
+        setTime((prevTime) => prevTime + 0.01);
+      }, 10);
     }
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [isRunning]);
-
-  const handleStartStop = () => {
-    setIsRunning(!isRunning);
+    setIsRunning((prevState) => !prevState);
   };
 
-  const handleReset = () => {
+  const resetStopwatch = () => {
+    clearInterval(intervalRef.current);
     setTime(0);
     setIsRunning(false);
-  };
-
-  const formatTime = (inputTime) => {
-    const hours = Math.floor(inputTime / 3600);
-    const minutes = Math.floor((inputTime % 3600) / 60);
-    const seconds = inputTime % 60;
-
-    const formattedHours = hours.toString().padStart(2, "0");
-    const formattedMinutes = minutes.toString().padStart(2, "0");
-    const formattedSeconds = seconds.toString().padStart(2, "0");
-
-    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   };
 
   return (
     <div className="stopwatch">
       <h1>Stopwatch</h1>
       <p>{formatTime(time)}</p>
-      <button onClick={handleStartStop}>{isRunning ? "Stop" : "Start"}</button>
-      <button onClick={handleReset}>Reset</button>
+      <div className="controls">
+        <button onClick={startStopwatch}>{isRunning ? "Stop" : "Start"}</button>
+        <button onClick={resetStopwatch}>Reset</button>
+      </div>
     </div>
   );
 };
